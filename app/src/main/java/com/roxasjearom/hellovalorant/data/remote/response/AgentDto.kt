@@ -9,7 +9,6 @@ data class AgentDto(
     val background: String,
     val backgroundGradientColors: List<String>,
     val bustPortrait: String,
-    val characterTags: Any,
     val description: String,
     val developerName: String,
     val displayIcon: String,

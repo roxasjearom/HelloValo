@@ -1,9 +1,7 @@
 package com.roxasjearom.hellovalorant.presentation.agents
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -48,8 +46,10 @@ fun AgentCard(agent: Agent) {
                 .build(),
             placeholder = painterResource(R.drawable.brim_background),
             contentDescription = null,
-            contentScale = ContentScale.Inside,
-            modifier = Modifier.size(168.dp)
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier
+                .width(182.dp)
+                .height(248.dp)
         )
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -59,8 +59,10 @@ fun AgentCard(agent: Agent) {
                 .build(),
             placeholder = painterResource(R.drawable.brim_fullportrait),
             contentDescription = null,
-            contentScale = ContentScale.Inside,
-            modifier = Modifier.size(168.dp)
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier
+                .width(182.dp)
+                .height(248.dp)
         )
     }
 }
