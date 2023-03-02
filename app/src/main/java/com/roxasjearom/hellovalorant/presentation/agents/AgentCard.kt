@@ -5,8 +5,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -23,11 +27,13 @@ import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
 @Composable
 fun AgentGridList(
     agents: List<Agent>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues()
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
+        contentPadding = contentPadding,
     ) {
         items(agents) { agent ->
             AgentCard(agent = agent)
@@ -37,34 +43,46 @@ fun AgentGridList(
 
 @Composable
 fun AgentCard(agent: Agent) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(agent.background)
-                .crossfade(true)
-                .memoryCachePolicy(CachePolicy.ENABLED)
-                .build(),
-            placeholder = painterResource(R.drawable.brim_background),
-            contentDescription = null,
-            contentScale = ContentScale.FillHeight,
-            modifier = Modifier
-                .width(182.dp)
-                .height(248.dp)
-        )
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(agent.fullPortrait)
-                .crossfade(true)
-                .memoryCachePolicy(CachePolicy.ENABLED)
-                .build(),
-            placeholder = painterResource(R.drawable.brim_fullportrait),
-            contentDescription = null,
-            contentScale = ContentScale.FillHeight,
-            modifier = Modifier
-                .width(182.dp)
-                .height(248.dp)
-        )
+    Card(
+        modifier = Modifier.padding(8.dp),
+    ) {
+        Column(Modifier.padding(all = 16.dp)) {
+            Box(modifier = Modifier.wrapContentSize(), contentAlignment = Alignment.Center) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(agent.background)
+                        .crossfade(true)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .build(),
+                    placeholder = painterResource(R.drawable.brim_background),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier
+                        .width(182.dp)
+                        .height(248.dp)
+                )
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(agent.fullPortrait)
+                        .crossfade(true)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .build(),
+                    placeholder = painterResource(R.drawable.brim_fullportrait),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier
+                        .width(182.dp)
+                        .height(248.dp)
+                )
+            }
+            Text(
+                text = agent.displayName,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.align(CenterHorizontally)
+            )
+        }
     }
+
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
