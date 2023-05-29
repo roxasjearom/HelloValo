@@ -21,7 +21,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.roxasjearom.hellovalorant.R
-import com.roxasjearom.hellovalorant.data.remote.response.Role
+import com.roxasjearom.hellovalorant.domain.model.Role
 import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
 
 @Composable
@@ -36,6 +36,7 @@ fun RoleSection(role: Role) {
                 text = role.displayName.uppercase(),
                 style = MaterialTheme.typography.headlineMedium,
             )
+            Spacer(modifier = Modifier.width(8.dp))
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(role.displayIcon)
@@ -75,11 +76,10 @@ fun RoleSectionPreview() {
     HelloValoTheme {
         RoleSection(
             role = Role(
-                assetPath = "",
+                uuid = "",
                 description = "",
                 displayIcon = "https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png",
-                "Initiator",
-                uuid = ""
+                displayName = "Initiator",
             )
         )
     }

@@ -3,33 +3,28 @@ package com.roxasjearom.hellovalorant.data.mapper
 import com.roxasjearom.hellovalorant.data.remote.response.AgentDto
 import com.roxasjearom.hellovalorant.domain.model.Agent
 import com.roxasjearom.hellovalorant.domain.model.AgentDetails
+import com.roxasjearom.hellovalorant.domain.model.Role
 
 fun AgentDto.toAgent() = Agent(
     uuid = uuid,
     displayName = displayName,
     fullPortrait = fullPortrait,
     background = background,
+    roleIcon = role.displayIcon,
 )
 
 fun AgentDto.toAgentDetails() = AgentDetails(
+    uuid = uuid,
     abilities = abilities,
-    assetPath = assetPath,
     background = background,
-    backgroundGradientColors = backgroundGradientColors,
-    bustPortrait = bustPortrait,
     description = description,
-    developerName = developerName,
     displayIcon = displayIcon,
-    displayIconSmall = displayIconSmall,
     displayName = displayName,
     fullPortrait = fullPortrait,
-    fullPortraitV2 = fullPortraitV2,
-    isAvailableForTest = isAvailableForTest,
-    isBaseContent = isBaseContent,
-    isFullPortraitRightFacing = isFullPortraitRightFacing,
-    isPlayableCharacter = isPlayableCharacter,
-    killfeedPortrait = killfeedPortrait,
-    role = role,
-    uuid = uuid,
-    voiceLine = voiceLine,
+    role = Role(
+        uuid = role.uuid,
+        description = role.description,
+        displayIcon = role.displayIcon,
+        displayName = role.displayName,
+    ),
 )

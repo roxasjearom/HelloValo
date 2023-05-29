@@ -5,4 +5,5 @@ data class Agent(
     val displayName: String,
     val fullPortrait: String,
     val background: String,
+    val roleIcon: String,
 )
