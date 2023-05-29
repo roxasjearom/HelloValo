@@ -1,6 +1,7 @@
 package com.roxasjearom.hellovalorant.presentation.agents
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -28,7 +29,8 @@ import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
 fun AgentGridList(
     agents: List<Agent>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
+    onAgentClicked: (uuid: String) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -36,17 +38,19 @@ fun AgentGridList(
         contentPadding = contentPadding,
     ) {
         items(agents) { agent ->
-            AgentCard(agent = agent)
+            AgentCard(agent = agent, onAgentClicked = onAgentClicked)
         }
     }
 }
 
 @Composable
-fun AgentCard(agent: Agent) {
+fun AgentCard(agent: Agent, onAgentClicked: (uuid: String) -> Unit) {
     Card(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable { onAgentClicked(agent.uuid) },
     ) {
-        Column(Modifier.padding(all = 16.dp)) {
+        Column(modifier = Modifier.padding(all = 16.dp)) {
             Box(modifier = Modifier.wrapContentSize(), contentAlignment = Alignment.Center) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -67,7 +71,6 @@ fun AgentCard(agent: Agent) {
                         .crossfade(true)
                         .memoryCachePolicy(CachePolicy.ENABLED)
                         .build(),
-                    placeholder = painterResource(R.drawable.brim_fullportrait),
                     contentDescription = null,
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier
@@ -90,12 +93,13 @@ fun AgentCard(agent: Agent) {
 fun AgentCardPreview() {
     HelloValoTheme {
         AgentCard(
-            Agent(
+            agent = Agent(
                 uuid = "9f0d8ba9-4140-b941-57d3-a7ad57c6b417",
                 displayName = "Brimstone",
                 fullPortrait = "https://media.valorant-api.com/agents/9f0d8ba9-4140-b941-57d3-a7ad57c6b417/fullportrait.png",
                 background = "https://media.valorant-api.com/agents/9f0d8ba9-4140-b941-57d3-a7ad57c6b417/background.png"
-            )
+            ),
+            onAgentClicked = {}
         )
     }
 }

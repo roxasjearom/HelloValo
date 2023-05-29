@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Hello Valo</string>
     <string name="agents_title">Agents</string>
+
+    <string name="profile">Profile</string>
+    <string name="role">// Role</string>
+    <string name="biography">// Biography</string>
 </resources>

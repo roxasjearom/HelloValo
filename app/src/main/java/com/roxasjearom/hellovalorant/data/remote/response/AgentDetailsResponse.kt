@@ -3,7 +3,7 @@ package com.roxasjearom.hellovalorant.data.remote.response
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class AgentDataResponse(
+data class AgentDetailsResponse(
     val status: Int,
-    val data: List<AgentDto>,
+    val data: AgentDto,
 )
