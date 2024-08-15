@@ -23,5 +23,4 @@ data class AgentDto(
     val killfeedPortrait: String,
     val role: Role,
     val uuid: String,
-    val voiceLine: VoiceLine
 )
