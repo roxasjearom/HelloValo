@@ -17,14 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.roxasjearom.hellovalorant.R
 import com.roxasjearom.hellovalorant.domain.model.AgentDetails
 import com.roxasjearom.hellovalorant.domain.model.Role
 
@@ -33,22 +32,14 @@ fun ProfileScreen(agentUiState: AgentDetailsUiState) {
     val agentDetails = agentUiState.agentDetails
     agentDetails?.let {
         Box(modifier = Modifier.fillMaxSize()) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(agentDetails.fullPortrait)
-                    .crossfade(true)
-                    .memoryCachePolicy(CachePolicy.ENABLED)
-                    .build(),
-                placeholder = painterResource(R.drawable.brim_fullportrait),
-                contentDescription = null,
-                contentScale = ContentScale.None,
-                modifier = Modifier.fillMaxHeight()
-            )
+
             Text(
                 text = agentDetails.displayName.uppercase(),
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.30f),
                 style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.ExtraBold,
+                fontSize = 72.sp,
+                maxLines = 1,
                 modifier = Modifier.padding(16.dp),
             )
             Text(
@@ -58,25 +49,46 @@ fun ProfileScreen(agentUiState: AgentDetailsUiState) {
                 modifier = Modifier.padding(16.dp)
             )
 
-            Surface(
-                color = Color.Black.copy(alpha = 0.25f),
-                modifier = Modifier.wrapContentSize().align(Alignment.BottomCenter)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(32.dp)
-                ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(agentDetails.fullPortrait)
+                    .crossfade(true)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.None,
+                modifier = Modifier.fillMaxHeight()
+            )
 
-                    RoleSection(role = agentDetails.role)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    BiographySection(description = agentDetails.description)
-                }
-            }
-
+            AgentDescriptionSection(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.BottomCenter),
+                agentDetails = agentDetails,
+            )
         }
     }
 }
 
+@Composable
+fun AgentDescriptionSection(
+    modifier: Modifier = Modifier,
+    agentDetails: AgentDetails,
+) {
+    Surface(
+        color = Color.Black.copy(alpha = 0.25f),
+        modifier = modifier,
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(32.dp)
+        ) {
+            RoleSection(role = agentDetails.role)
+            Spacer(modifier = Modifier.height(16.dp))
+            BiographySection(description = agentDetails.description)
+        }
+    }
+}
 
 @Preview
 @Composable
