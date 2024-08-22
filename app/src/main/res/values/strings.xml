@@ -5,4 +5,6 @@
     <string name="profile">Profile</string>
     <string name="role">// Role</string>
     <string name="biography">// Biography</string>
+    <string name="empty_label"> </string>
+    <string name="back_button">Back</string>
 </resources>
