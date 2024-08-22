@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.android.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -84,4 +85,6 @@ dependencies {
     //Coil
     implementation(libs.coil.kt)
     implementation(libs.coil.kt.compose)
+
+    implementation(libs.kotlinx.serialization.core)
 }
