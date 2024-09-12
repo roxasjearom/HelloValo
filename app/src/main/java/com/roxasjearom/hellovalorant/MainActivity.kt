@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
     ) {
         CenterAlignedTopAppBar(
             title = {
-                Text(stringResource(id = currentScreen.title).uppercase(),)
+                Text(stringResource(id = currentScreen.title).uppercase())
             },
             modifier = modifier,
             navigationIcon = @Composable {
