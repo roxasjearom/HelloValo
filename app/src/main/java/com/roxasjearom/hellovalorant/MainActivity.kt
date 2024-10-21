@@ -3,7 +3,6 @@ package com.roxasjearom.hellovalorant
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.roxasjearom.hellovalorant.navigation.Route
 import com.roxasjearom.hellovalorant.presentation.agents.AgentScreen
 import com.roxasjearom.hellovalorant.presentation.agents.AgentViewModel
 import com.roxasjearom.hellovalorant.presentation.profile.ProfileScreen
@@ -52,8 +52,8 @@ class MainActivity : ComponentActivity() {
             val scrollBehavior =
                 TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
             val backStackEntry by navController.currentBackStackEntryAsState()
-            val currentScreen = getScreen(
-                backStackEntry?.destination?.route ?: Screen.Agents.name
+            val currentScreen = getScreenTitle(
+                backStackEntry?.destination?.route ?: Route.Agents.toString()
             )
 
             Scaffold(
@@ -69,18 +69,18 @@ class MainActivity : ComponentActivity() {
             ) { innerPadding ->
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Agents.name,
+                    startDestination = Route.Agents,
                     modifier = Modifier.padding(innerPadding)
                 ) {
-                    composable(Screen.Agents.name) {
+                    composable<Route.Agents> {
                         val agentViewModel: AgentViewModel = hiltViewModel()
                         AgentScreen(
                             agents = agentViewModel.agentUiState.collectAsStateWithLifecycle().value.agents,
                             onAgentClicked = { agentUuid ->
-                                navController.navigate("profile/$agentUuid")
+                                navController.navigate(Route.Profile(agentUuid))
                             })
                     }
-                    composable("${Screen.Profile.name}/{agentUuid}") {
+                    composable<Route.Profile> {
                         val profileViewModel: ProfileViewModel = hiltViewModel()
                         ProfileScreen(agentUiState = profileViewModel.agentDetailsUiState.collectAsStateWithLifecycle().value)
                     }
@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun HelloValoAppBar(
-        currentScreen: Screen,
+        currentScreen: String,
         modifier: Modifier = Modifier,
         canNavigateBack: Boolean,
         navigateUp: () -> Unit = {},
@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
     ) {
         CenterAlignedTopAppBar(
             title = {
-                Text(stringResource(id = currentScreen.title).uppercase())
+                Text(currentScreen.uppercase())
             },
             modifier = modifier,
             navigationIcon = @Composable {
@@ -116,17 +116,11 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    //Temporary getter for screen enum until Type-safe navigation is not yet stable
-    private fun getScreen(route: String): Screen {
+    private fun getScreenTitle(route: String): String {
         return if (route.contains("Profile")) {
-            Screen.Profile
+            getString(R.string.empty_label)
         } else {
-            Screen.Agents
+            getString(R.string.agents_title)
         }
     }
-}
-
-enum class Screen(@StringRes val title: Int) {
-    Agents(title = R.string.agents_title),
-    Profile(title = R.string.empty_label),
 }

@@ -3,8 +3,10 @@ package com.roxasjearom.hellovalorant.presentation.profile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.roxasjearom.hellovalorant.domain.model.AgentDetails
 import com.roxasjearom.hellovalorant.domain.repository.AgentRepository
+import com.roxasjearom.hellovalorant.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +25,7 @@ class ProfileViewModel @Inject constructor(
     val agentDetailsUiState: StateFlow<AgentDetailsUiState> = _agentDetailsUiState.asStateFlow()
 
     init {
-        val agentUuid: String = checkNotNull(savedStateHandle["agentUuid"])
+        val agentUuid: String = savedStateHandle.toRoute<Route.Profile>().id
         getAgentByUuid(agentUuid)
     }
 
