@@ -11,6 +11,7 @@ data class AgentDetails(
     val displayName: String,
     val fullPortrait: String,
     val role: Role,
+    val backgroundGradientColors: List<String>,
 )
 
 data class Role(

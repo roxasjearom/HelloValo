@@ -27,4 +27,5 @@ fun AgentDto.toAgentDetails() = AgentDetails(
         displayIcon = role.displayIcon,
         displayName = role.displayName,
     ),
+    backgroundGradientColors = backgroundGradientColors,
 )

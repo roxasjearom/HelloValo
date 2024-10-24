@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -45,11 +46,13 @@ fun ProfileScreen(agentUiState: AgentDetailsUiState) {
     val agentDetails = agentUiState.agentDetails
     agentDetails?.let {
         Box(modifier = Modifier.fillMaxSize()) {
-            val colors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
+            val gradientColors = agentDetails.backgroundGradientColors
+                .map { hexColor -> Color("#$hexColor".toColorInt()) }
+            val defaultColors =
+                listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
+
             val infiniteTransition = rememberInfiniteTransition(label = "background")
-            val targetOffset = with(LocalDensity.current) {
-                1000.dp.toPx()
-            }
+            val targetOffset = with(LocalDensity.current) { 1000.dp.toPx() }
             val offset by infiniteTransition.animateFloat(
                 initialValue = 0f,
                 targetValue = targetOffset,
@@ -68,9 +71,9 @@ fun ProfileScreen(agentUiState: AgentDetailsUiState) {
                     .fillMaxSize()
                     .blur(40.dp)
                     .drawWithCache {
-                        val brushSize = 400f
+                        val brushSize = 800f
                         val brush = Brush.linearGradient(
-                            colors = colors,
+                            colors = gradientColors.ifEmpty { defaultColors },
                             start = Offset(offset, offset),
                             end = Offset(offset + brushSize, offset + brushSize),
                             tileMode = TileMode.Mirror,
@@ -157,6 +160,7 @@ fun ProfileScreenPreview() {
                     displayName = "Controller",
                     displayIcon = "",
                 ),
+                backgroundGradientColors = listOf("90e3fdff", "557f8cff", "2b4e7cff", "1e3344ff")
             )
         )
     )
