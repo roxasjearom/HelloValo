@@ -3,6 +3,9 @@ package com.roxasjearom.hellovalorant
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -59,11 +62,18 @@ class MainActivity : ComponentActivity() {
             Scaffold(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 topBar = {
-                    HelloValoAppBar(
-                        currentScreen = currentScreen,
-                        canNavigateBack = navController.previousBackStackEntry != null,
-                        navigateUp = { navController.navigateUp() },
-                        scrollBehavior = scrollBehavior,
+                    AnimatedVisibility(
+                        visible = currentScreen.equals(Route.Agents.toString(), true),
+                        enter = slideInVertically(initialOffsetY = { -it }),
+                        exit = slideOutVertically(targetOffsetY = { -it }),
+                        content = {
+                            HelloValoAppBar(
+                                currentScreen = currentScreen,
+                                canNavigateBack = navController.previousBackStackEntry != null,
+                                navigateUp = { navController.navigateUp() },
+                                scrollBehavior = scrollBehavior,
+                            )
+                        }
                     )
                 },
             ) { innerPadding ->
