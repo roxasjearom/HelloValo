@@ -32,8 +32,8 @@ import androidx.navigation.compose.rememberNavController
 import com.roxasjearom.hellovalorant.navigation.Route
 import com.roxasjearom.hellovalorant.presentation.agents.AgentScreen
 import com.roxasjearom.hellovalorant.presentation.agents.AgentViewModel
-import com.roxasjearom.hellovalorant.presentation.profile.ProfileScreen
-import com.roxasjearom.hellovalorant.presentation.profile.ProfileViewModel
+import com.roxasjearom.hellovalorant.presentation.agentdetails.AgentDetailsScreen
+import com.roxasjearom.hellovalorant.presentation.agentdetails.AgentDetailsViewModel
 import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -91,8 +91,8 @@ class MainActivity : ComponentActivity() {
                             })
                     }
                     composable<Route.Profile> {
-                        val profileViewModel: ProfileViewModel = hiltViewModel()
-                        ProfileScreen(agentUiState = profileViewModel.agentDetailsUiState.collectAsStateWithLifecycle().value)
+                        val agentDetailsViewModel: AgentDetailsViewModel = hiltViewModel()
+                        AgentDetailsScreen(agentUiState = agentDetailsViewModel.agentDetailsUiState.collectAsStateWithLifecycle().value)
                     }
                 }
             }

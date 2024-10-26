@@ -1,4 +1,4 @@
-package com.roxasjearom.hellovalorant.presentation.profile
+package com.roxasjearom.hellovalorant.presentation.agentdetails
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -65,7 +65,7 @@ fun BiographySection(description: String) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = description,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

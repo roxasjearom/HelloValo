@@ -1,4 +1,4 @@
-package com.roxasjearom.hellovalorant.presentation.profile
+package com.roxasjearom.hellovalorant.presentation.agentdetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
+class AgentDetailsViewModel @Inject constructor(
     private val agentRepository: AgentRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

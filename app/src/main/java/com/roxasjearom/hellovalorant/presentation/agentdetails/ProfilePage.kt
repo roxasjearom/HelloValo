@@ -1,4 +1,4 @@
-package com.roxasjearom.hellovalorant.presentation.profile
+package com.roxasjearom.hellovalorant.presentation.agentdetails
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -42,7 +42,7 @@ import com.roxasjearom.hellovalorant.domain.model.AgentDetails
 import com.roxasjearom.hellovalorant.domain.model.Role
 
 @Composable
-fun ProfileScreen(agentUiState: AgentDetailsUiState) {
+fun ProfilePage(agentUiState: AgentDetailsUiState) {
     val agentDetails = agentUiState.agentDetails
     agentDetails?.let {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -144,7 +144,7 @@ fun AgentDescriptionSection(
 @Preview
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen(
+    ProfilePage(
         agentUiState = AgentDetailsUiState(
             agentDetails = AgentDetails(
                 uuid = "e370fa57-4757-3604-3648-499e1f642d3f",
