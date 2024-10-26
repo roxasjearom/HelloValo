@@ -39,4 +39,7 @@ class AgentDetailsViewModel @Inject constructor(
     }
 }
 
-data class AgentDetailsUiState(val agentDetails: AgentDetails? = null)
+data class AgentDetailsUiState(
+    val agentDetails: AgentDetails? = null,
+    val selectedAbility: Int = 0,
+)
