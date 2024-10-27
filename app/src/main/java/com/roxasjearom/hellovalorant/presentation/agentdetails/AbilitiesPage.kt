@@ -44,7 +44,9 @@ fun AbilitiesPage(
             .padding(16.dp),
         horizontalAlignment = CenterHorizontally,
     ) {
-        AbilitiesSection(abilities = abilities)
+        AbilitiesSection(
+            abilities = abilities.filterNot { it.slot.equals("Passive", true) }
+        )
     }
 }
 
