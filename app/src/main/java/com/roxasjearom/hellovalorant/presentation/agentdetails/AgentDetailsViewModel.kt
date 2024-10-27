@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.roxasjearom.hellovalorant.domain.model.AgentDetails
+import com.roxasjearom.hellovalorant.domain.model.VideoUrl
 import com.roxasjearom.hellovalorant.domain.repository.AgentRepository
 import com.roxasjearom.hellovalorant.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,9 +33,13 @@ class AgentDetailsViewModel @Inject constructor(
 
     private fun getAgentByUuid(uuid: String) {
         viewModelScope.launch {
-            val agentDetails = agentRepository.getAgentByUuid(uuid)
+            val agentDetails = async { agentRepository.getAgentByUuid(uuid) }
+            val videoUrls = async { agentRepository.getVideoUrlsByUuid(uuid) }
             _agentDetailsUiState.update {
-                it.copy(agentDetails = agentDetails)
+                it.copy(
+                    agentDetails = agentDetails.await(),
+                    videoUrls = videoUrls.await()
+                )
             }
         }
     }
@@ -41,5 +47,5 @@ class AgentDetailsViewModel @Inject constructor(
 
 data class AgentDetailsUiState(
     val agentDetails: AgentDetails? = null,
-    val selectedAbility: Int = 0,
+    val videoUrls: List<VideoUrl> = emptyList(),
 )

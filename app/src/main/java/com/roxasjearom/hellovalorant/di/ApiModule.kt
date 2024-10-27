@@ -1,5 +1,6 @@
 package com.roxasjearom.hellovalorant.di
 
+import com.roxasjearom.hellovalorant.data.remote.SecondaryApi
 import com.roxasjearom.hellovalorant.data.remote.ValorantApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiModule {
     private const val BASE_URL = "https://valorant-api.com/"
+    private const val SECONDARY_URL = "https://roxasjearom.github.io/"
 
     @Singleton
     @Provides
@@ -38,5 +40,27 @@ object ApiModule {
             )
             .build()
             .create(ValorantApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSecondaryApi(): SecondaryApi {
+        return Retrofit.Builder()
+            .baseUrl(SECONDARY_URL)
+            .addConverterFactory(
+                MoshiConverterFactory.create(
+                    Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()
+                )
+            )
+            .client(
+                OkHttpClient.Builder()
+                    .addInterceptor(HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    }).build()
+            )
+            .build()
+            .create(SecondaryApi::class.java)
     }
 }

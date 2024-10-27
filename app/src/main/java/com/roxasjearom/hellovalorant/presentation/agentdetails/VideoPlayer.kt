@@ -4,6 +4,7 @@ import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -17,7 +18,7 @@ import androidx.media3.ui.PlayerView
 @Composable
 fun VideoPlayer(modifier: Modifier = Modifier, videoUrl: String) {
     val context = LocalContext.current
-    val exoPlayer = ExoPlayer.Builder(context).build()
+    val exoPlayer = remember { ExoPlayer.Builder(context).build() }
 
     DisposableEffect(Unit) {
         onDispose {

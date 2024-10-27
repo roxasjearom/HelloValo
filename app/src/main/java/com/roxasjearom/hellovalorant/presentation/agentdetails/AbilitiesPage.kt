@@ -31,12 +31,14 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.roxasjearom.hellovalorant.R
 import com.roxasjearom.hellovalorant.domain.model.Ability
+import com.roxasjearom.hellovalorant.domain.model.VideoUrl
 import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
 
 @Composable
 fun AbilitiesPage(
     modifier: Modifier = Modifier,
     abilities: List<Ability>,
+    videoUrls: List<VideoUrl>,
 ) {
     Column(
         modifier = modifier
@@ -45,7 +47,8 @@ fun AbilitiesPage(
         horizontalAlignment = CenterHorizontally,
     ) {
         AbilitiesSection(
-            abilities = abilities.filterNot { it.slot.equals("Passive", true) }
+            abilities = abilities.filterNot { it.slot.equals("Passive", true) },
+            videoUrls = videoUrls,
         )
     }
 }
@@ -54,19 +57,12 @@ fun AbilitiesPage(
 fun AbilitiesSection(
     modifier: Modifier = Modifier,
     abilities: List<Ability>,
+    videoUrls: List<VideoUrl>,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = CenterHorizontally,
     ) {
-        //TODO to be removed once we have a legit source for the video URLs
-        val videoUrls = listOf(
-            "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/da2d65e4abc2129e284cf5248fd70925f093a0b3.mp4",
-            "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/9df59d490062acceb7c6ca32a3650b55718381f7.mp4",
-            "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/8e0b72295747346b60c354765944f5233fb208f2.mp4",
-            "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/ccd8e6c574b7017a2681e5d37c744f5a654327e3.mp4"
-        )
-
         var selectedPosition by remember { mutableIntStateOf(0) }
 
         Text(
@@ -76,7 +72,9 @@ fun AbilitiesSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        VideoPlayer(videoUrl = videoUrls[selectedPosition])
+        if (videoUrls.isNotEmpty()) {
+            VideoPlayer(videoUrl = videoUrls[selectedPosition].videoUrl)
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -152,7 +150,8 @@ fun AbilitiesScreenPreview(modifier: Modifier = Modifier) {
                     displayName = "Updraft",
                     slot = "Ability1",
                 ),
-            )
+            ),
+            videoUrls = emptyList(),
         )
     }
 }

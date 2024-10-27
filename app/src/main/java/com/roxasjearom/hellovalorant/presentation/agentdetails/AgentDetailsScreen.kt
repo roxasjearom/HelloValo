@@ -37,8 +37,12 @@ fun AgentDetailsScreen(modifier: Modifier = Modifier, agentUiState: AgentDetails
                     0 -> {
                         ProfilePage(agentUiState = agentUiState)
                     }
+
                     1 -> {
-                        AbilitiesPage(abilities = agentUiState.agentDetails.abilities)
+                        AbilitiesPage(
+                            abilities = agentUiState.agentDetails.abilities,
+                            videoUrls = agentUiState.videoUrls,
+                        )
                     }
                 }
             }
@@ -51,7 +55,8 @@ fun AgentDetailsScreen(modifier: Modifier = Modifier, agentUiState: AgentDetails
                 verticalArrangement = Arrangement.Center
             ) {
                 repeat(pagerState.pageCount) { iteration ->
-                    val color = if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                    val color =
+                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
                     Box(
                         modifier = Modifier
                             .padding(4.dp)
@@ -69,23 +74,30 @@ fun AgentDetailsScreen(modifier: Modifier = Modifier, agentUiState: AgentDetails
 @Composable
 fun AgentDetailsScreenPreview(modifier: Modifier = Modifier) {
     HelloValoTheme {
-        AgentDetailsScreen(agentUiState = AgentDetailsUiState(
-            agentDetails = AgentDetails(
-                uuid = "e370fa57-4757-3604-3648-499e1f642d3f",
-                abilities = emptyList(),
-                background = "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png",
-                description = "Joining from the USA, Brimstone's orbital arsenal ensures his squad always has the advantage. His ability to deliver utility precisely and safely make him the unmatched boots-on-the-ground commander.",
-                displayIcon = "",
-                displayName = "Brimstone",
-                fullPortrait = "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/fullportrait.png",
-                role = Role(
-                    uuid = "123",
-                    description = "Controllers are experts in slicing up dangerous territory to set their team up for success.",
-                    displayName = "Controller",
+        AgentDetailsScreen(
+            agentUiState = AgentDetailsUiState(
+                agentDetails = AgentDetails(
+                    uuid = "e370fa57-4757-3604-3648-499e1f642d3f",
+                    abilities = emptyList(),
+                    background = "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png",
+                    description = "Joining from the USA, Brimstone's orbital arsenal ensures his squad always has the advantage. His ability to deliver utility precisely and safely make him the unmatched boots-on-the-ground commander.",
                     displayIcon = "",
-                ),
-                backgroundGradientColors = listOf("90e3fdff", "557f8cff", "2b4e7cff", "1e3344ff")
+                    displayName = "Brimstone",
+                    fullPortrait = "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/fullportrait.png",
+                    role = Role(
+                        uuid = "123",
+                        description = "Controllers are experts in slicing up dangerous territory to set their team up for success.",
+                        displayName = "Controller",
+                        displayIcon = "",
+                    ),
+                    backgroundGradientColors = listOf(
+                        "90e3fdff",
+                        "557f8cff",
+                        "2b4e7cff",
+                        "1e3344ff"
+                    )
+                )
             )
-        ))
+        )
     }
 }
