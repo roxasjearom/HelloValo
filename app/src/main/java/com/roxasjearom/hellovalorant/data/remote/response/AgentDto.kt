@@ -4,7 +4,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class AgentDto(
-    val abilities: List<Ability>,
+    val abilities: List<AbilityDto>,
     val assetPath: String,
     val background: String,
     val backgroundGradientColors: List<String>,

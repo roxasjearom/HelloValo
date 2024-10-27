@@ -1,7 +1,5 @@
 package com.roxasjearom.hellovalorant.domain.model
 
-import com.roxasjearom.hellovalorant.data.remote.response.Ability
-
 data class AgentDetails(
     val uuid: String,
     val abilities: List<Ability>,
@@ -19,4 +17,11 @@ data class Role(
     val description: String,
     val displayIcon: String,
     val displayName: String,
+)
+
+data class Ability(
+    val description: String,
+    val displayIcon: String?,
+    val displayName: String,
+    val slot: String,
 )

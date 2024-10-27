@@ -30,7 +30,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.roxasjearom.hellovalorant.R
-import com.roxasjearom.hellovalorant.data.remote.response.Ability
+import com.roxasjearom.hellovalorant.domain.model.Ability
 import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
 
 @Composable
@@ -44,10 +44,6 @@ fun AbilitiesPage(
             .padding(16.dp),
         horizontalAlignment = CenterHorizontally,
     ) {
-        Text(
-            text = stringResource(R.string.special_abilities).uppercase(),
-            style = MaterialTheme.typography.headlineMedium,
-        )
         AbilitiesSection(abilities = abilities)
     }
 }
@@ -61,7 +57,27 @@ fun AbilitiesSection(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = CenterHorizontally,
     ) {
+        //TODO to be removed once we have a legit source for the video URLs
+        val videoUrls = listOf(
+            "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/da2d65e4abc2129e284cf5248fd70925f093a0b3.mp4",
+            "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/9df59d490062acceb7c6ca32a3650b55718381f7.mp4",
+            "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/8e0b72295747346b60c354765944f5233fb208f2.mp4",
+            "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/ccd8e6c574b7017a2681e5d37c744f5a654327e3.mp4"
+        )
+
         var selectedPosition by remember { mutableIntStateOf(0) }
+
+        Text(
+            text = stringResource(R.string.special_abilities).uppercase(),
+            style = MaterialTheme.typography.headlineMedium,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        VideoPlayer(videoUrl = videoUrls[selectedPosition])
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,

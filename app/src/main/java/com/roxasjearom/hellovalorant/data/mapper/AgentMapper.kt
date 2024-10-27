@@ -1,6 +1,7 @@
 package com.roxasjearom.hellovalorant.data.mapper
 
 import com.roxasjearom.hellovalorant.data.remote.response.AgentDto
+import com.roxasjearom.hellovalorant.domain.model.Ability
 import com.roxasjearom.hellovalorant.domain.model.Agent
 import com.roxasjearom.hellovalorant.domain.model.AgentDetails
 import com.roxasjearom.hellovalorant.domain.model.Role
@@ -15,7 +16,12 @@ fun AgentDto.toAgent() = Agent(
 
 fun AgentDto.toAgentDetails() = AgentDetails(
     uuid = uuid,
-    abilities = abilities,
+    abilities = abilities.map { Ability(
+        description = it.description,
+        displayIcon = it.displayIcon,
+        displayName = it.displayName,
+        slot = it.slot,
+    ) },
     background = background,
     description = description,
     displayIcon = displayIcon,
