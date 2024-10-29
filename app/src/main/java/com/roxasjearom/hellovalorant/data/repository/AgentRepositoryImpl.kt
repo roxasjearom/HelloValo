@@ -14,7 +14,10 @@ import javax.inject.Inject
 class AgentRepositoryImpl @Inject constructor(
     private val agentRemoteDataSource: AgentRemoteDataSource,
 ) : AgentRepository {
-    override suspend fun getAgents(): List<Agent>{
+
+    private var localAbilityUrls: List<AbilityUrl> = emptyList()
+
+    override suspend fun getAgents(): List<Agent> {
         return agentRemoteDataSource.getAgents().data.map { it.toAgent() }
     }
 
@@ -23,7 +26,16 @@ class AgentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAbilityUrls(): List<AbilityUrl> {
-        return agentRemoteDataSource.getAbilityUrls().data.map { it.toAbilityUrl() }
+        return when {
+            localAbilityUrls.isEmpty() -> {
+                val abilityUrlsFromRemote = agentRemoteDataSource.getAbilityUrls().data.map { it.toAbilityUrl() }
+                localAbilityUrls = abilityUrlsFromRemote
+                abilityUrlsFromRemote
+            }
+            else -> {
+                localAbilityUrls
+            }
+        }
     }
 
     override suspend fun getVideoUrlsByUuid(uuid: String): List<VideoUrl> {

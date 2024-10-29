@@ -5,14 +5,14 @@ import com.roxasjearom.hellovalorant.domain.repository.AgentRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 abstract class RepositoryModule {
 
-    @ViewModelScoped
+    @ActivityRetainedScoped
     @Binds
     abstract fun bindAgentRepository(impl: AgentRepositoryImpl): AgentRepository
 }
