@@ -1,5 +1,6 @@
 package com.roxasjearom.hellovalorant.presentation.agentdetails
 
+import android.os.Build
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -30,6 +31,9 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUrl: String) {
         factory = { ctx ->
             PlayerView(ctx).apply {
                 useController = false
+                if (Build.VERSION.SDK_INT >= 29) {
+                    transitionAlpha = 0.1f
+                }
             }
         },
         modifier = modifier.fillMaxWidth(),
