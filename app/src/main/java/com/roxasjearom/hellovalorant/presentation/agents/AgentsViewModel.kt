@@ -17,8 +17,8 @@ class AgentViewModel @Inject constructor(
     private val agentRepository: AgentRepository
 ) : ViewModel() {
 
-    private val _agentUiState = MutableStateFlow(AgentUiState())
-    val agentUiState: StateFlow<AgentUiState> = _agentUiState.asStateFlow()
+    private val _uiState = MutableStateFlow(AgentUiState())
+    val uiState: StateFlow<AgentUiState> = _uiState.asStateFlow()
 
     init {
         getAgents()
@@ -26,14 +26,18 @@ class AgentViewModel @Inject constructor(
 
     private fun getAgents() {
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
             val agents = agentRepository.getAgents()
-            _agentUiState.update {
-                it.copy(agents = agents)
+
+            _uiState.update {
+                it.copy(agents = agents, isLoading = false)
             }
         }
     }
 }
 
 data class AgentUiState(
-    val agents: List<Agent> = emptyList()
+    val agents: List<Agent> = emptyList(),
+    val isLoading: Boolean = false,
 )
