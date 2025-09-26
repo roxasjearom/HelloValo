@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Hello Valo"
-include ':app'
+include(":app")
