@@ -46,6 +46,7 @@ class AgentDetailsViewModel @Inject constructor(
 }
 
 data class AgentDetailsUiState(
+    val isLoading: Boolean = false,
     val agentDetails: AgentDetails? = null,
     val videoUrls: List<VideoUrl> = emptyList(),
 )

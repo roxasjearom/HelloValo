@@ -13,15 +13,30 @@ import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.roxasjearom.hellovalorant.domain.model.AgentDetails
 import com.roxasjearom.hellovalorant.domain.model.Role
+import com.roxasjearom.hellovalorant.presentation.common.FullScreenLoadingIndicator
 import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
+
+@Composable
+fun AgentDetailsRoute(viewModel: AgentDetailsViewModel = hiltViewModel()) {
+    val uiState by viewModel.agentDetailsUiState.collectAsStateWithLifecycle()
+
+    if (uiState.isLoading) {
+        FullScreenLoadingIndicator()
+    } else {
+        AgentDetailsScreen(agentUiState = uiState)
+    }
+}
 
 @Composable
 fun AgentDetailsScreen(modifier: Modifier = Modifier, agentUiState: AgentDetailsUiState) {
@@ -72,7 +87,7 @@ fun AgentDetailsScreen(modifier: Modifier = Modifier, agentUiState: AgentDetails
 
 @Preview
 @Composable
-fun AgentDetailsScreenPreview(modifier: Modifier = Modifier) {
+fun AgentDetailsScreenPreview() {
     HelloValoTheme {
         AgentDetailsScreen(
             agentUiState = AgentDetailsUiState(

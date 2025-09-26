@@ -23,17 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.roxasjearom.hellovalorant.navigation.Route
-import com.roxasjearom.hellovalorant.presentation.agents.AgentScreen
-import com.roxasjearom.hellovalorant.presentation.agents.AgentViewModel
-import com.roxasjearom.hellovalorant.presentation.agentdetails.AgentDetailsScreen
-import com.roxasjearom.hellovalorant.presentation.agentdetails.AgentDetailsViewModel
+import com.roxasjearom.hellovalorant.presentation.agentdetails.AgentDetailsRoute
+import com.roxasjearom.hellovalorant.presentation.agents.AgentRoute
 import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -83,16 +79,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.padding(innerPadding)
                 ) {
                     composable<Route.Agents> {
-                        val agentViewModel: AgentViewModel = hiltViewModel()
-                        AgentScreen(
-                            agents = agentViewModel.agentUiState.collectAsStateWithLifecycle().value.agents,
+                        AgentRoute(
                             onAgentClicked = { agentUuid ->
                                 navController.navigate(Route.Profile(agentUuid))
-                            })
+                            }
+                        )
                     }
                     composable<Route.Profile> {
-                        val agentDetailsViewModel: AgentDetailsViewModel = hiltViewModel()
-                        AgentDetailsScreen(agentUiState = agentDetailsViewModel.agentDetailsUiState.collectAsStateWithLifecycle().value)
+                        AgentDetailsRoute()
                     }
                 }
             }
