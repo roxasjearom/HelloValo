@@ -33,10 +33,12 @@ class AgentDetailsViewModel @Inject constructor(
 
     private fun getAgentByUuid(uuid: String) {
         viewModelScope.launch {
+            _agentDetailsUiState.update { it.copy(isLoading = true) }
             val agentDetails = async { agentRepository.getAgentByUuid(uuid) }
             val videoUrls = async { agentRepository.getVideoUrlsByUuid(uuid) }
             _agentDetailsUiState.update {
                 it.copy(
+                    isLoading = false,
                     agentDetails = agentDetails.await(),
                     videoUrls = videoUrls.await()
                 )
