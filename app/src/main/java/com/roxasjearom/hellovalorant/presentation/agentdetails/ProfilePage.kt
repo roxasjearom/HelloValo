@@ -10,8 +10,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,97 +42,109 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.roxasjearom.hellovalorant.LocalAnimatedVisibilityScope
 import com.roxasjearom.hellovalorant.LocalSharedTransitionScope
+import com.roxasjearom.hellovalorant.R
 import com.roxasjearom.hellovalorant.domain.model.AgentDetails
 import com.roxasjearom.hellovalorant.domain.model.Role
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun ProfilePage(agentUiState: AgentDetailsUiState) {
-    val agentDetails = agentUiState.agentDetails
+fun ProfilePage(modifier: Modifier = Modifier, agentDetails: AgentDetails) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: throw IllegalStateException("No SharedElementScope found")
     val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
         ?: throw IllegalStateException("No SharedElementScope found")
 
-    agentDetails?.let {
-        with(sharedTransitionScope) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                val gradientColors = agentDetails.backgroundGradientColors
-                    .map { hexColor -> Color("#$hexColor".toColorInt()) }
-                val defaultColors =
-                    listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
+    with(sharedTransitionScope) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            val gradientColors = agentDetails.backgroundGradientColors
+                .map { hexColor -> Color("#$hexColor".toColorInt()) }
+            val defaultColors =
+                listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
 
-                val infiniteTransition = rememberInfiniteTransition(label = "background")
-                val targetOffset = with(LocalDensity.current) { 1000.dp.toPx() }
-                val offset by infiniteTransition.animateFloat(
-                    initialValue = 0f,
-                    targetValue = targetOffset,
-                    animationSpec = infiniteRepeatable(
-                        animation = tween(
-                            durationMillis = 25_000,
-                            easing = LinearEasing
-                        ),
-                        repeatMode = RepeatMode.Reverse
+            val infiniteTransition = rememberInfiniteTransition(label = "background")
+            val targetOffset = with(LocalDensity.current) { 1000.dp.toPx() }
+            val offset by infiniteTransition.animateFloat(
+                initialValue = 0f,
+                targetValue = targetOffset,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(
+                        durationMillis = 25_000,
+                        easing = LinearEasing
                     ),
-                    label = "offset"
-                )
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "offset"
+            )
 
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .blur(40.dp)
-                        .drawWithCache {
-                            val brushSize = 800f
-                            val brush = Brush.linearGradient(
-                                colors = gradientColors.ifEmpty { defaultColors },
-                                start = Offset(offset, offset),
-                                end = Offset(offset + brushSize, offset + brushSize),
-                                tileMode = TileMode.Mirror,
-                            )
-                            onDrawBehind {
-                                drawRect(brush)
-                            }
-                        }
-                )
-                Text(
-                    text = agentDetails.displayName.uppercase(),
-                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.30f),
-                    style = MaterialTheme.typography.displayLarge,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 72.sp,
-                    maxLines = 1,
-                    modifier = Modifier.padding(16.dp),
-                )
-                Text(
-                    text = agentDetails.displayName.uppercase(),
-                    style = MaterialTheme.typography.displayMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(16.dp)
-                )
-
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(agentDetails.fullPortrait)
-                        .crossfade(true)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.None,
-                    modifier = Modifier
-                        .sharedElement(
-                            sharedContentState = rememberSharedContentState(key = agentDetails.uuid),
-                            animatedVisibilityScope = animatedVisibilityScope,
+            Spacer(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(40.dp)
+                    .drawWithCache {
+                        val brushSize = 800f
+                        val brush = Brush.linearGradient(
+                            colors = gradientColors.ifEmpty { defaultColors },
+                            start = Offset(offset, offset),
+                            end = Offset(offset + brushSize, offset + brushSize),
+                            tileMode = TileMode.Mirror,
                         )
-                        .fillMaxHeight()
-                )
+                        onDrawBehind {
+                            drawRect(brush)
+                        }
+                    }
+            )
 
-                AgentDescriptionSection(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .align(Alignment.BottomCenter),
-                    agentDetails = agentDetails,
-                )
-            }
+            Text(
+                text = agentDetails.displayName.uppercase(),
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.30f),
+                style = MaterialTheme.typography.displayLarge,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 72.sp,
+                maxLines = 1,
+                modifier = modifier.padding(16.dp),
+            )
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(agentDetails.background)
+                    .crossfade(true)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build(),
+                placeholder = painterResource(R.drawable.brim_background),
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                modifier = modifier.fillMaxWidth()
+            )
+
+            Text(
+                text = agentDetails.displayName.uppercase(),
+                style = MaterialTheme.typography.displayMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.padding(16.dp)
+            )
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(agentDetails.fullPortrait)
+                    .crossfade(true)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.None,
+                modifier = Modifier
+                    .sharedElement(
+                        sharedContentState = rememberSharedContentState(key = agentDetails.uuid),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                    )
+                    .fillMaxSize()
+            )
+
+            AgentDescriptionSection(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.BottomCenter),
+                agentDetails = agentDetails,
+            )
         }
     }
 }
@@ -160,23 +173,22 @@ fun AgentDescriptionSection(
 @Composable
 fun ProfileScreenPreview() {
     ProfilePage(
-        agentUiState = AgentDetailsUiState(
-            agentDetails = AgentDetails(
-                uuid = "e370fa57-4757-3604-3648-499e1f642d3f",
-                abilities = emptyList(),
-                background = "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png",
-                description = "Joining from the USA, Brimstone's orbital arsenal ensures his squad always has the advantage. His ability to deliver utility precisely and safely make him the unmatched boots-on-the-ground commander.",
+        agentDetails = AgentDetails(
+            uuid = "e370fa57-4757-3604-3648-499e1f642d3f",
+            abilities = emptyList(),
+            background = "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png",
+            description = "Joining from the USA, Brimstone's orbital arsenal ensures his squad always has the advantage. His ability to deliver utility precisely and safely make him the unmatched boots-on-the-ground commander.",
+            displayIcon = "",
+            displayName = "Brimstone",
+            fullPortrait = "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/fullportrait.png",
+            role = Role(
+                uuid = "123",
+                description = "Controllers are experts in slicing up dangerous territory to set their team up for success.",
+                displayName = "Controller",
                 displayIcon = "",
-                displayName = "Brimstone",
-                fullPortrait = "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/fullportrait.png",
-                role = Role(
-                    uuid = "123",
-                    description = "Controllers are experts in slicing up dangerous territory to set their team up for success.",
-                    displayName = "Controller",
-                    displayIcon = "",
-                ),
-                backgroundGradientColors = listOf("90e3fdff", "557f8cff", "2b4e7cff", "1e3344ff")
-            )
+            ),
+            backgroundGradientColors = listOf("90e3fdff", "557f8cff", "2b4e7cff", "1e3344ff")
         )
+
     )
 }

@@ -33,7 +33,6 @@ fun HelloValoApp() {
                         LocalAnimatedVisibilityScope provides this,
                     ) {
                         AgentRoute(
-                            navController = navController,
                             onAgentClicked = { agentUuid ->
                                 navController.navigate(Route.Profile(agentUuid))
                             }
