@@ -1,6 +1,7 @@
 package com.roxasjearom.hellovalorant.presentation.agents
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.roxasjearom.hellovalorant.LocalAnimatedVisibilityScope
+import com.roxasjearom.hellovalorant.LocalSharedTransitionScope
 import com.roxasjearom.hellovalorant.R
 import com.roxasjearom.hellovalorant.domain.model.Agent
 import com.roxasjearom.hellovalorant.ui.theme.HelloValoTheme
@@ -49,66 +52,78 @@ fun AgentGridList(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AgentCard(agent: Agent, onAgentClicked: (uuid: String) -> Unit) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .clickable { onAgentClicked(agent.uuid) },
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(all = 8.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = CenterHorizontally,
-        ) {
-            Box {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(agent.roleIcon)
-                        .crossfade(true)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
-                    placeholder = painterResource(R.drawable.ic_initiator),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .width(24.dp)
-                        .height(24.dp)
-                        .align(alignment = TopEnd)
-                )
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+        ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+        ?: throw IllegalStateException("No SharedElementScope found")
 
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(agent.background)
-                        .crossfade(true)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
-                    placeholder = painterResource(R.drawable.brim_background),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier
-                        .width(182.dp)
-                        .height(248.dp)
-                )
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(agent.fullPortrait)
-                        .crossfade(true)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier
-                        .width(182.dp)
-                        .height(248.dp)
+    with(sharedTransitionScope) {
+        Card(
+            modifier = Modifier
+                .padding(8.dp)
+                .clickable { onAgentClicked(agent.uuid) },
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(all = 8.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = CenterHorizontally,
+            ) {
+                Box {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(agent.roleIcon)
+                            .crossfade(true)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .build(),
+                        placeholder = painterResource(R.drawable.ic_initiator),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .width(24.dp)
+                            .height(24.dp)
+                            .align(alignment = TopEnd)
+                    )
+
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(agent.background)
+                            .crossfade(true)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .build(),
+                        placeholder = painterResource(R.drawable.brim_background),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillHeight,
+                        modifier = Modifier
+                            .width(182.dp)
+                            .height(248.dp)
+                    )
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(agent.fullPortrait)
+                            .crossfade(true)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillHeight,
+                        modifier = Modifier
+                            .sharedElement(
+                                sharedContentState = rememberSharedContentState(key = agent.uuid),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                            )
+                            .width(182.dp)
+                            .height(248.dp)
+                    )
+                }
+                Text(
+                    text = agent.displayName.uppercase(),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.align(CenterHorizontally),
                 )
             }
-            Text(
-                text = agent.displayName.uppercase(),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.align(CenterHorizontally),
-            )
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.roxasjearom.hellovalorant.presentation.agentdetails
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -38,85 +39,99 @@ import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.roxasjearom.hellovalorant.LocalAnimatedVisibilityScope
+import com.roxasjearom.hellovalorant.LocalSharedTransitionScope
 import com.roxasjearom.hellovalorant.domain.model.AgentDetails
 import com.roxasjearom.hellovalorant.domain.model.Role
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProfilePage(agentUiState: AgentDetailsUiState) {
     val agentDetails = agentUiState.agentDetails
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+        ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+        ?: throw IllegalStateException("No SharedElementScope found")
+
     agentDetails?.let {
-        Box(modifier = Modifier.fillMaxSize()) {
-            val gradientColors = agentDetails.backgroundGradientColors
-                .map { hexColor -> Color("#$hexColor".toColorInt()) }
-            val defaultColors =
-                listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
+        with(sharedTransitionScope) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                val gradientColors = agentDetails.backgroundGradientColors
+                    .map { hexColor -> Color("#$hexColor".toColorInt()) }
+                val defaultColors =
+                    listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
 
-            val infiniteTransition = rememberInfiniteTransition(label = "background")
-            val targetOffset = with(LocalDensity.current) { 1000.dp.toPx() }
-            val offset by infiniteTransition.animateFloat(
-                initialValue = 0f,
-                targetValue = targetOffset,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(
-                        durationMillis = 25_000,
-                        easing = LinearEasing
+                val infiniteTransition = rememberInfiniteTransition(label = "background")
+                val targetOffset = with(LocalDensity.current) { 1000.dp.toPx() }
+                val offset by infiniteTransition.animateFloat(
+                    initialValue = 0f,
+                    targetValue = targetOffset,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(
+                            durationMillis = 25_000,
+                            easing = LinearEasing
+                        ),
+                        repeatMode = RepeatMode.Reverse
                     ),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "offset"
-            )
+                    label = "offset"
+                )
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .blur(40.dp)
-                    .drawWithCache {
-                        val brushSize = 800f
-                        val brush = Brush.linearGradient(
-                            colors = gradientColors.ifEmpty { defaultColors },
-                            start = Offset(offset, offset),
-                            end = Offset(offset + brushSize, offset + brushSize),
-                            tileMode = TileMode.Mirror,
-                        )
-                        onDrawBehind {
-                            drawRect(brush)
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .blur(40.dp)
+                        .drawWithCache {
+                            val brushSize = 800f
+                            val brush = Brush.linearGradient(
+                                colors = gradientColors.ifEmpty { defaultColors },
+                                start = Offset(offset, offset),
+                                end = Offset(offset + brushSize, offset + brushSize),
+                                tileMode = TileMode.Mirror,
+                            )
+                            onDrawBehind {
+                                drawRect(brush)
+                            }
                         }
-                    }
-            )
+                )
+                Text(
+                    text = agentDetails.displayName.uppercase(),
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.30f),
+                    style = MaterialTheme.typography.displayLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 72.sp,
+                    maxLines = 1,
+                    modifier = Modifier.padding(16.dp),
+                )
+                Text(
+                    text = agentDetails.displayName.uppercase(),
+                    style = MaterialTheme.typography.displayMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
+                )
 
-            Text(
-                text = agentDetails.displayName.uppercase(),
-                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.30f),
-                style = MaterialTheme.typography.displayLarge,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 72.sp,
-                maxLines = 1,
-                modifier = Modifier.padding(16.dp),
-            )
-            Text(
-                text = agentDetails.displayName.uppercase(),
-                style = MaterialTheme.typography.displayMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(16.dp)
-            )
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(agentDetails.fullPortrait)
+                        .crossfade(true)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.None,
+                    modifier = Modifier
+                        .sharedElement(
+                            sharedContentState = rememberSharedContentState(key = agentDetails.uuid),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        )
+                        .fillMaxHeight()
+                )
 
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(agentDetails.fullPortrait)
-                    .crossfade(true)
-                    .memoryCachePolicy(CachePolicy.ENABLED)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.None,
-                modifier = Modifier.fillMaxHeight()
-            )
-
-            AgentDescriptionSection(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.BottomCenter),
-                agentDetails = agentDetails,
-            )
+                AgentDescriptionSection(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.BottomCenter),
+                    agentDetails = agentDetails,
+                )
+            }
         }
     }
 }
